@@ -1,16 +1,18 @@
-# raylib-starter
+# Seki
+
+In honor of exploring the beautiful Sequoia and King's Canyon front and backcountry, this Internet "browser" is a Sierra Nevada themed app (Find The Easter Eggs Too)!
 
 ## Building Raylib
 
 First build raylib. Go to lib/raylib/src/ and run
 
 ```
-make PLATFORM=PLATFORM_%%%
+make PLATFORM=PLATFORM_DESKTOP
 ```
 
 depending on your preferred platform.
 
-## Building your project
+## Build
 
 Navigate to the base directory and simply compile using
 
@@ -18,21 +20,8 @@ Navigate to the base directory and simply compile using
 make -f desktop.mk
 ```
 
-for desktop
-
-or
+Then run by
 
 ```
-
-make -f web.mk
-
+./build/seki
 ```
-
-and run using
-
-```
-emrun build/index.html
-
-
-```
-

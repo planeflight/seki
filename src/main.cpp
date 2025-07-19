@@ -38,7 +38,7 @@ void quit() {
 void frame();
 
 int main() {
-    InitWindow(window_width, window_height, "GAME");
+    InitWindow(window_width, window_height, "Seki");
     init();
 
 #ifdef PLATFORM_WEB
