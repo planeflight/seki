@@ -1,5 +1,9 @@
 #include <raylib.h>
 
+#include <iostream>
+
+#include "parser/parse_html.hpp"
+#include "util/file.hpp"
 #include "util/types.hpp"
 
 #ifdef PLATFORM_WEB
@@ -9,11 +13,14 @@
 static constexpr i32 window_width = 1600, window_height = 900;
 
 struct Global {
-    Texture texture;
 } g;
 
 void init() {
-    g.texture = LoadTexture("./res/scarfy.png");
+    std::string source = load_file("./tests/index.html");
+    std::cout << source << std::endl;
+    HTMLParser parser(source);
+    Node *r = parser.parse();
+    std::cout << r->s << std::endl;
 }
 
 void input(f32 dt) {}
@@ -26,12 +33,10 @@ void render(f32 dt) {
 
     DrawText("SOME TEXT!!", 190, 200, 20, LIGHTGRAY);
 
-    DrawTexture(g.texture, 0, 0, WHITE);
     EndDrawing();
 }
 
 void quit() {
-    UnloadTexture(g.texture);
     CloseWindow();
 }
 

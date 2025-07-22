@@ -3,7 +3,8 @@ CC = clang++
 BIN = build
 APP = seki
 
-SRC = ${wildcard src/*.cpp}
+SRC = ${wildcard src/*.cpp} ${wildcard src/**/*.cpp}
+
 OBJ = $(patsubst %.cpp, $(BIN)/%.o, $(SRC))
 
 
@@ -12,6 +13,7 @@ CFLAGS += -Wmissing-declarations -Woverlength-strings -Wpointer-arith -Wundef
 CFLAGS += -Wunused-local-typedefs -Wunused-result -Wvarargs -Wvla
 CFLAGS += -Wwrite-strings -DNOMINMAX -fno-omit-frame-pointer
 CFLAGS += -std=c++20 -fPIC
+CFLAGS += -g
 
 LIB = -Llib/raylib/src/ -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -latomic
 INCLUDE = -Ilib/raylib/src/ -Ilib/raylib/src/external -Ilib/raylib/src/external/glfw/include
