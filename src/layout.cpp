@@ -1,5 +1,7 @@
 #include "layout.hpp"
 
+#include <cassert>
+
 #include "raylib.h"
 #include "util/def.hpp"
 
@@ -39,9 +41,9 @@ void LayoutBox::render() {
     }
 }
 
-TextBox::TextBox(const std::string &text, float height)
-    : LayoutBox(), text(text) {
-    Vector2 size = MeasureTextEx(GetFontDefault(), text.c_str(), height, 0);
+TextBox::TextBox(const std::string &text, Font font, float height)
+    : LayoutBox(), text(text), font(font) {
+    Vector2 size = MeasureTextEx(font, text.c_str(), height, 0);
     dimensions.rect.width = size.x;
     dimensions.rect.height = size.y;
 }
@@ -49,16 +51,16 @@ TextBox::TextBox(const std::string &text, float height)
 // TextBox
 void TextBox::render() {
     Vector2 top_left = dimensions.get_content_start();
-    DrawText(text.c_str(),
-             top_left.x,
-             top_left.y,
-             dimensions.rect.height,
-             text_color);
+    DrawTextEx(
+        font, text.c_str(), top_left, dimensions.rect.height, 0, text_color);
     LayoutBox::render();
 }
 
-TextBox *inline_text(const std::string &text, Color c, float height) {
-    TextBox *t = new TextBox(text, height);
+TextBox *inline_text(const std::string &text,
+                     Font font,
+                     Color c,
+                     float height) {
+    TextBox *t = new TextBox(text, font, height);
     t->text_color = c;
     return t;
 }

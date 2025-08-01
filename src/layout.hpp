@@ -41,22 +41,28 @@ struct LayoutBox {
 };
 
 struct TextBox : public LayoutBox {
-    TextBox(const std::string &text, float height);
+    TextBox(const std::string &text, Font font, float height);
     void render() override;
     std::string text;
+    Font font;
 };
 
 TextBox *inline_text(const std::string &text,
+                     Font font,
                      Color c = BLACK,
                      float height = 15);
 
 template <int Level>
-TextBox *heading(const std::string &text, Color c = BLACK, float height = 50) {
+TextBox *heading(const std::string &text,
+                 Font font,
+                 Color c = BLACK,
+                 float height = 50) {
     height = std::max(5, 60 - 5 * Level);
-    return inline_text(text, c, height);
+    return inline_text(text, font, c, height);
 }
 
 TextBox *paragraph(const std::string &text,
+                   Font font,
                    float max_width,
                    Color c = BLACK,
                    float height = 15);

@@ -14,6 +14,7 @@
 static constexpr i32 window_width = 1600, window_height = 900;
 
 struct Global {
+    Font font;
     LayoutBox root;
 } g;
 
@@ -24,12 +25,17 @@ void init() {
     Node *r = parser.parse();
     std::cout << r->s << std::endl;
 
+    // load font
+    // load big for better aliasing
+    g.font = LoadFontEx(
+        "./res/Open_Sans/static/OpenSans-Regular.ttf", 100, nullptr, 0);
+
     // TEST LayoutBox
     g.root.dimensions = {.rect = {100.0f, 100.0f, 100.0f, 100.0f}};
-    g.root.children.push_back(heading<1>("Hikes", BLACK));
-    g.root.children.push_back(heading<3>("Lakes Trail", BLACK));
-    g.root.children.push_back(heading<3>("General Sherman Loop", BLACK));
-    g.root.children.push_back(heading<1>("Backcountry", BLACK));
+    g.root.children.push_back(heading<1>("Hikes", g.font));
+    g.root.children.push_back(heading<3>("Lakes Trail", g.font));
+    g.root.children.push_back(heading<5>("General Sherman Loop", g.font));
+    g.root.children.push_back(heading<1>("Backcountry", g.font));
     g.root.construct_dimensions();
 }
 
@@ -48,6 +54,7 @@ void render(f32 dt) {
 }
 
 void quit() {
+    UnloadFont(g.font);
     CloseWindow();
 }
 
