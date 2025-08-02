@@ -31,8 +31,14 @@ void init() {
         "./res/Open_Sans/static/OpenSans-Regular.ttf", 100, nullptr, 0);
 
     // TEST LayoutBox
-    g.root.dimensions = {.rect = {100.0f, 100.0f, 100.0f, 100.0f}};
+    g.root.dimensions = {.rect = {0.0f, 0.0f, window_width, window_height}};
     g.root.children.push_back(heading<1>("Hikes", g.font));
+    g.root.children.back()->dimensions.border.set_uniform(10.0f);
+    g.root.children.back()->dimensions.border.color = RED;
+    g.root.children.back()->dimensions.margin.set_uniform(10.0f);
+    g.root.children.back()->dimensions.margin.color = YELLOW;
+    g.root.children.back()->dimensions.padding.set_uniform(10.0f);
+    g.root.children.back()->dimensions.padding.color = GREEN;
     g.root.children.push_back(heading<3>("Lakes Trail", g.font));
     g.root.children.push_back(heading<5>("General Sherman Loop", g.font));
     g.root.children.push_back(heading<1>("Backcountry", g.font));
