@@ -39,6 +39,7 @@ void init() {
     g.root.children.back()->dimensions.margin.color = YELLOW;
     g.root.children.back()->dimensions.padding.set_uniform(10.0f);
     g.root.children.back()->dimensions.padding.color = GREEN;
+    g.root.children.back()->text_align = TextAlign::RIGHT;
 
     g.root.children.push_back(heading<3>("Lakes Trail", g.font));
     g.root.children.push_back(heading<3>("General Sherman Loop", g.font));

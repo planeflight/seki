@@ -19,13 +19,11 @@ void LayoutBox::construct_dimensions() {
                         dimensions.padding.left; // also content_x
         float child_y = dimensions.rect.y + dimensions.border.top +
                         dimensions.margin.top + dimensions.padding.top;
-        std::cout << children.size() << std::endl;
         for (auto *c : children) {
             auto &cd = c->dimensions;
             c->construct_dimensions();
 
             cd.rect.x = child_x;
-            std::cout << child_x << ", " << child_y << std::endl;
             cd.rect.y = child_y;
             // expand child to parent
             cd.rect.width = dimensions.get_padding_rect().width;
@@ -88,8 +86,30 @@ void TextBox::construct_dimensions() {
 // TextBox
 void TextBox::render() {
     LayoutBox::render();
-    Vector2 top_left = dimensions.get_content_start();
-    DrawTextEx(font, text.c_str(), top_left, height, 0, text_color);
+    if (text_align == TextAlign::LEFT) {
+        Vector2 top_left = dimensions.get_content_start();
+        DrawTextEx(font, text.c_str(), top_left, height, 0, text_color);
+    } else if (text_align == TextAlign::CENTER) {
+        Rectangle content_rect = dimensions.get_padding_rect();
+        float width = MeasureTextEx(font, text.c_str(), height, 0).x;
+        DrawTextEx(font,
+                   text.c_str(),
+                   {content_rect.x + content_rect.width / 2 - width / 2,
+                    content_rect.y},
+                   height,
+                   0,
+                   text_color);
+    } else {
+        Rectangle content_rect = dimensions.get_padding_rect();
+        float width = MeasureTextEx(font, text.c_str(), height, 0).x;
+        DrawTextEx(
+            font,
+            text.c_str(),
+            {content_rect.x + content_rect.width - width, content_rect.y},
+            height,
+            0,
+            text_color);
+    }
 }
 
 TextBox *inline_text(const std::string &text,

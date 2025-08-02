@@ -73,6 +73,8 @@ struct Dimensions {
 
 enum class BlockType { INLINE, BLOCK };
 
+enum class TextAlign { LEFT, CENTER, RIGHT };
+
 struct LayoutBox {
     LayoutBox() = default;
     virtual ~LayoutBox();
@@ -83,6 +85,8 @@ struct LayoutBox {
     BlockType block_type = BlockType::BLOCK;
     std::vector<LayoutBox *> children;
     Color text_color = BLACK, background_color = WHITE;
+
+    TextAlign text_align = TextAlign::LEFT;
 };
 
 struct TextBox : public LayoutBox {
