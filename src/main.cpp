@@ -39,8 +39,9 @@ void init() {
     g.root.children.back()->dimensions.margin.color = YELLOW;
     g.root.children.back()->dimensions.padding.set_uniform(10.0f);
     g.root.children.back()->dimensions.padding.color = GREEN;
+
     g.root.children.push_back(heading<3>("Lakes Trail", g.font));
-    g.root.children.push_back(heading<5>("General Sherman Loop", g.font));
+    g.root.children.push_back(heading<3>("General Sherman Loop", g.font));
     g.root.children.push_back(heading<1>("Backcountry", g.font));
     g.root.construct_dimensions();
 }
@@ -51,9 +52,8 @@ void update(f32 dt) {}
 
 void render(f32 dt) {
     BeginDrawing();
-    ClearBackground(RAYWHITE);
+    ClearBackground(WHITE);
 
-    // DrawText("SOME TEXT!!", 190, 200, 20, LIGHTGRAY);
     g.root.render();
 
     EndDrawing();

@@ -82,7 +82,7 @@ struct LayoutBox {
     Dimensions dimensions;
     BlockType block_type = BlockType::BLOCK;
     std::vector<LayoutBox *> children;
-    Color text_color = BLACK;
+    Color text_color = BLACK, background_color = WHITE;
 };
 
 struct TextBox : public LayoutBox {

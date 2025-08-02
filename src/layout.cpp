@@ -19,18 +19,19 @@ void LayoutBox::construct_dimensions() {
                         dimensions.padding.left; // also content_x
         float child_y = dimensions.rect.y + dimensions.border.top +
                         dimensions.margin.top + dimensions.padding.top;
+        std::cout << children.size() << std::endl;
         for (auto *c : children) {
             auto &cd = c->dimensions;
             c->construct_dimensions();
 
             cd.rect.x = child_x;
+            std::cout << child_x << ", " << child_y << std::endl;
             cd.rect.y = child_y;
+            // expand child to parent
+            cd.rect.width = dimensions.get_padding_rect().width;
             child_y += cd.rect.height;
-            // child_y +=
-            //     cd.rect.height +
-            //     (cd.border.top + cd.margin.top + cd.padding.top) +
-            //     (cd.border.bottom + cd.margin.bottom + cd.padding.bottom);
         }
+        // dimensions.rect.height = child_y;
     } else {
         UNIMPLEMENTED();
     }
@@ -38,29 +39,33 @@ void LayoutBox::construct_dimensions() {
 
 void LayoutBox::render() {
     // draw border, padding, margin
-    if (dimensions.border != 0.0f) {
+    if (dimensions.margin != 0.0f && dimensions.margin.color != WHITE) {
         // draw margin rectangle
         DrawRectangle(dimensions.rect.x,
                       dimensions.rect.y,
                       dimensions.rect.width,
                       dimensions.rect.height,
                       dimensions.margin.color);
+    }
+    if (dimensions.border != 0.0f && dimensions.padding.color != WHITE) {
         auto border = dimensions.get_margin_rect();
         DrawRectangle(border.x,
                       border.y,
                       border.width,
                       border.height,
                       dimensions.border.color);
+    }
+    if (dimensions.padding != 0.0f && dimensions.padding.color != WHITE) {
         auto padding = dimensions.get_border_rect();
         DrawRectangle(padding.x,
                       padding.y,
                       padding.width,
                       padding.height,
                       dimensions.padding.color);
-        auto content = dimensions.get_padding_rect();
-        DrawRectangle(
-            content.x, content.y, content.width, content.height, WHITE);
     }
+    auto content = dimensions.get_padding_rect();
+    DrawRectangle(
+        content.x, content.y, content.width, content.height, background_color);
     for (auto *c : children) {
         c->render();
     }
@@ -77,6 +82,7 @@ void TextBox::construct_dimensions() {
     dimensions.rect.height = size.y + dimensions.border.top_bottom() +
                              dimensions.margin.top_bottom() +
                              dimensions.padding.top_bottom();
+    LayoutBox::construct_dimensions();
 }
 
 // TextBox
