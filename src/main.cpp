@@ -16,6 +16,7 @@ static constexpr i32 window_width = 1600, window_height = 900;
 struct Global {
     Font font;
     LayoutBox root;
+    Image icon;
 } g;
 
 void init() {
@@ -24,6 +25,10 @@ void init() {
     HTMLParser parser(source);
     Node *r = parser.parse();
     std::cout << r->s << std::endl;
+
+    // load icon
+    g.icon = LoadImage("./res/icon.png");
+    SetWindowIcon(g.icon);
 
     // load font
     // load big for better aliasing
@@ -47,6 +52,30 @@ void init() {
     g.root.children.back()->text_color = RED;
     g.root.push_child<TextBox>(heading<3>("General Sherman Loop", g.font));
     g.root.push_child<TextBox>(heading<1>("Backcountry", g.font));
+    // paragraph
+    ParagraphBox *p = g.root.create_child<ParagraphBox>(
+        "Placeholder text is temporary text used to indicate where actual "
+        "content should go, often seen in website forms or design mockups. It "
+        "helps designers and developers focus on layout and visual elements "
+        "without being distracted by the content itself. A common example "
+        "is \" Lorem ipsum, \" a pseudo-Latin text used to simulate the "
+        "appearance of text. ",
+        g.font,
+        23.0f);
+    p->dimensions.margin.set_uniform(25.0f);
+    p->dimensions.margin.color = YELLOW;
+
+    p = g.root.create_child<ParagraphBox>(
+        "Placeholder text is temporary text used to indicate where actual "
+        "content should go, often seen in website forms or design mockups. It "
+        "helps designers and developers focus on layout and visual elements "
+        "without being distracted by the content itself. A common example "
+        "is \" Lorem ipsum, \" a pseudo-Latin text used to simulate the "
+        "appearance of text. ",
+        g.font,
+        23.0f);
+    p->dimensions.margin.set_uniform(45.0f);
+    p->dimensions.margin.color = RED;
     g.root.construct_dimensions();
 }
 
@@ -65,6 +94,7 @@ void render(f32 dt) {
 
 void quit() {
     UnloadFont(g.font);
+    UnloadImage(g.icon);
     CloseWindow();
 }
 

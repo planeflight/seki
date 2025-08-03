@@ -82,7 +82,7 @@ struct LayoutBox {
     virtual void render();
 
     template <typename T, typename... Args>
-    T *create_child(Args &...args) {
+    T *create_child(Args &&...args) {
         static_assert(std::is_base_of<LayoutBox, T>::value,
                       "T not derived from LayoutBox");
         T *child = new T(args...);
@@ -123,8 +123,8 @@ struct LayoutBox {
 
 struct TextBox : public LayoutBox {
     TextBox(const std::string &text, Font font, float height);
-    void render() override;
-    void construct_dimensions() override;
+    virtual void render() override;
+    virtual void construct_dimensions() override;
 
     std::string text;
     Font font;
@@ -139,10 +139,15 @@ TextBox *heading(const std::string &text, Font font, float height = 50) {
     return inline_text(text, font, height);
 }
 
-TextBox *paragraph(const std::string &text,
-                   Font font,
-                   float max_width,
-                   Color c = BLACK,
-                   float height = 15);
+struct ParagraphBox : public TextBox {
+    ParagraphBox(const std::string &text, Font font, float height);
+    void render() override;
+    void construct_dimensions() override;
+
+    float max_width = 0.0f;
+    // <text, render width>
+    std::vector<std::pair<std::string, float>> substrings;
+    float spacing = 1.0f;
+};
 
 #endif // LAYOUT_HPP

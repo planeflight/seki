@@ -22,12 +22,15 @@ void LayoutBox::construct_dimensions() {
                         dimensions.margin.top + dimensions.padding.top;
         for (auto *c : children) {
             auto &cd = c->dimensions;
-            c->construct_dimensions();
-
             cd.rect.x = child_x;
             cd.rect.y = child_y;
-            // expand child to parent
+            // expand child to parent, tell child how much width it has
             cd.rect.width = dimensions.get_padding_rect().width;
+            // each rect has to calculate it's own height and then the new
+            // child_y can be computed
+            c->construct_dimensions();
+
+            // since cd.rect.height is computed we can increment
             child_y += cd.rect.height;
         }
         // dimensions.rect.height = child_y;
@@ -38,7 +41,8 @@ void LayoutBox::construct_dimensions() {
 
 void LayoutBox::render() {
     // draw border, padding, margin
-    if (dimensions.margin != 0.0f && dimensions.margin.color != WHITE) {
+    if (dimensions.margin != 0.0f &&
+        dimensions.margin.color != background_color) {
         // draw margin rectangle
         DrawRectangle(dimensions.rect.x,
                       dimensions.rect.y,
@@ -46,7 +50,8 @@ void LayoutBox::render() {
                       dimensions.rect.height,
                       dimensions.margin.color);
     }
-    if (dimensions.border != 0.0f && dimensions.padding.color != WHITE) {
+    if (dimensions.border != 0.0f &&
+        dimensions.border.color != background_color) {
         auto border = dimensions.get_margin_rect();
         DrawRectangle(border.x,
                       border.y,
@@ -54,7 +59,8 @@ void LayoutBox::render() {
                       border.height,
                       dimensions.border.color);
     }
-    if (dimensions.padding != 0.0f && dimensions.padding.color != WHITE) {
+    if (dimensions.padding != 0.0f &&
+        dimensions.padding.color != background_color) {
         auto padding = dimensions.get_border_rect();
         DrawRectangle(padding.x,
                       padding.y,
@@ -75,9 +81,9 @@ TextBox::TextBox(const std::string &text, Font font, float height)
 
 void TextBox::construct_dimensions() {
     Vector2 size = MeasureTextEx(font, text.c_str(), height, 0);
-    dimensions.rect.width = size.x + dimensions.border.left_right() +
-                            dimensions.margin.left_right() +
-                            dimensions.padding.left_right();
+    // dimensions.rect.width = size.x + dimensions.border.left_right() +
+    //                         dimensions.margin.left_right() +
+    //                         dimensions.padding.left_right();
     dimensions.rect.height = size.y + dimensions.border.top_bottom() +
                              dimensions.margin.top_bottom() +
                              dimensions.padding.top_bottom();
@@ -118,9 +124,36 @@ TextBox *inline_text(const std::string &text, Font font, float height) {
     return t;
 }
 
-TextBox *paragraph(const std::string &text,
-                   float max_width,
-                   Color c,
-                   float height) {
-    UNIMPLEMENTED();
+ParagraphBox::ParagraphBox(const std::string &text, Font font, float height)
+    : TextBox(text, font, height) {}
+
+void ParagraphBox::render() {
+    LayoutBox::render();
+    Vector2 p = dimensions.get_content_start();
+    for (const auto &s : substrings) {
+        DrawTextEx(font, s.first.c_str(), p, height, 0, text_color);
+        p.y += height * spacing;
+    }
+}
+
+void ParagraphBox::construct_dimensions() {
+    // given the width we have, now we can compute the substrings
+    float max_width = dimensions.get_padding_rect().width;
+    int x = 0;
+    Vector2 size;
+    for (int i = 0; i < text.size(); ++i) {
+        size = MeasureTextEx(font, text.substr(x, i - x).c_str(), height, 0);
+        if (size.x > max_width) {
+            substrings.push_back({text.substr(x, i - x - 1), size.x});
+            x = i - 1;
+        }
+    }
+
+    substrings.push_back({text.substr(x), size.x});
+    dimensions.rect.height =
+        dimensions.margin.top_bottom() + dimensions.border.top_bottom() +
+        dimensions.padding.top_bottom() + substrings.size() * height * spacing;
+
+    // propagate to children
+    LayoutBox::construct_dimensions();
 }
