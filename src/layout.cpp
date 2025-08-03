@@ -130,9 +130,35 @@ ParagraphBox::ParagraphBox(const std::string &text, Font font, float height)
 void ParagraphBox::render() {
     LayoutBox::render();
     Vector2 p = dimensions.get_content_start();
-    for (const auto &s : substrings) {
-        DrawTextEx(font, s.first.c_str(), p, height, 0, text_color);
-        p.y += height * spacing;
+    if (text_align == TextAlign::LEFT) {
+        for (const auto &s : substrings) {
+            DrawTextEx(font, s.first.c_str(), p, height, 0, text_color);
+            p.y += height * spacing;
+        }
+    } else if (text_align == TextAlign::CENTER) {
+        Rectangle content_rect = dimensions.get_padding_rect();
+        for (const auto &s : substrings) {
+            DrawTextEx(
+                font,
+                s.first.c_str(),
+                {content_rect.x + content_rect.width / 2.0f - s.second / 2.0f,
+                 p.y},
+                height,
+                0,
+                text_color);
+            p.y += height * spacing;
+        }
+    } else {
+        Rectangle content_rect = dimensions.get_padding_rect();
+        for (const auto &s : substrings) {
+            DrawTextEx(font,
+                       s.first.c_str(),
+                       {content_rect.x + content_rect.width - s.second, p.y},
+                       height,
+                       0,
+                       text_color);
+            p.y += height * spacing;
+        }
     }
 }
 

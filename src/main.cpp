@@ -76,6 +76,7 @@ void init() {
         23.0f);
     p->dimensions.margin.set_uniform(45.0f);
     p->dimensions.margin.color = RED;
+    p->text_align = TextAlign::RIGHT;
     g.root.construct_dimensions();
 }
 
