@@ -32,18 +32,21 @@ void init() {
 
     // TEST LayoutBox
     g.root.dimensions = {.rect = {0.0f, 0.0f, window_width, window_height}};
-    g.root.children.push_back(heading<1>("Hikes", g.font));
-    g.root.children.back()->dimensions.border.set_uniform(10.0f);
-    g.root.children.back()->dimensions.border.color = RED;
-    g.root.children.back()->dimensions.margin.set_uniform(10.0f);
-    g.root.children.back()->dimensions.margin.color = YELLOW;
-    g.root.children.back()->dimensions.padding.set_uniform(10.0f);
-    g.root.children.back()->dimensions.padding.color = GREEN;
-    g.root.children.back()->text_align = TextAlign::RIGHT;
+    g.root.text_align = TextAlign::CENTER;
+    TextBox *t = g.root.push_child<TextBox>(heading<1>("Hikes", g.font));
+    t->dimensions.border.set_uniform(10.0f);
+    t->dimensions.border.color = RED;
+    t->dimensions.margin.set_uniform(10.0f);
+    t->dimensions.margin.color = YELLOW;
+    t->dimensions.padding.set_uniform(10.0f);
+    t->dimensions.padding.color = GREEN;
+    // g.root.children.back()->text_align = TextAlign::RIGHT;
 
-    g.root.children.push_back(heading<3>("Lakes Trail", g.font));
-    g.root.children.push_back(heading<3>("General Sherman Loop", g.font));
-    g.root.children.push_back(heading<1>("Backcountry", g.font));
+    g.root.push_child<TextBox>(heading<3>("Lakes Trail", g.font));
+    g.root.children.back()->text_align = TextAlign::LEFT;
+    g.root.children.back()->text_color = RED;
+    g.root.push_child<TextBox>(heading<3>("General Sherman Loop", g.font));
+    g.root.push_child<TextBox>(heading<1>("Backcountry", g.font));
     g.root.construct_dimensions();
 }
 

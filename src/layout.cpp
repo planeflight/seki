@@ -1,8 +1,9 @@
 #include "layout.hpp"
 
+#include <raylib.h>
+
 #include <cassert>
 
-#include "raylib.h"
 #include "util/def.hpp"
 
 LayoutBox::~LayoutBox() {
@@ -112,12 +113,8 @@ void TextBox::render() {
     }
 }
 
-TextBox *inline_text(const std::string &text,
-                     Font font,
-                     Color c,
-                     float height) {
+TextBox *inline_text(const std::string &text, Font font, float height) {
     TextBox *t = new TextBox(text, font, height);
-    t->text_color = c;
     return t;
 }
 

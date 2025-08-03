@@ -81,6 +81,38 @@ struct LayoutBox {
     virtual void construct_dimensions();
     virtual void render();
 
+    template <typename T, typename... Args>
+    T *create_child(Args &...args) {
+        static_assert(std::is_base_of<LayoutBox, T>::value,
+                      "T not derived from LayoutBox");
+        T *child = new T(args...);
+        children.push_back(child);
+        child->block_type = block_type;
+        child->text_color = text_color;
+        child->background_color = background_color;
+        child->text_align = text_align;
+        return child;
+    }
+    template <typename T>
+    T *push_child(T *child) {
+        static_assert(std::is_base_of<LayoutBox, T>::value,
+                      "T not derived from LayoutBox");
+        children.push_back(child);
+        child->block_type = block_type;
+        child->text_color = text_color;
+        child->background_color = background_color;
+        child->text_align = text_align;
+
+        return child;
+    }
+    template <typename T>
+    T *push_child_no_cascade(T *child) {
+        static_assert(std::is_base_of<LayoutBox, T>::value,
+                      "T not derived from LayoutBox");
+        children.push_back(child);
+        return child;
+    }
+
     Dimensions dimensions;
     BlockType block_type = BlockType::BLOCK;
     std::vector<LayoutBox *> children;
@@ -99,18 +131,12 @@ struct TextBox : public LayoutBox {
     float height;
 };
 
-TextBox *inline_text(const std::string &text,
-                     Font font,
-                     Color c = BLACK,
-                     float height = 15);
+TextBox *inline_text(const std::string &text, Font font, float height = 15);
 
 template <int Level>
-TextBox *heading(const std::string &text,
-                 Font font,
-                 Color c = BLACK,
-                 float height = 50) {
+TextBox *heading(const std::string &text, Font font, float height = 50) {
     height = std::max(5, 60 - 5 * Level);
-    return inline_text(text, font, c, height);
+    return inline_text(text, font, height);
 }
 
 TextBox *paragraph(const std::string &text,
