@@ -8,9 +8,9 @@ void Parser::expect(const std::string &s) {
     if (starts_with(s))
         idx += s.length();
     else {
-        throw std::runtime_error("Expected " + s + " at byte " +
-                                 std::to_string(idx) + ", but found " +
-                                 text.substr(idx, s.length()));
+        throw std::runtime_error("Expected '" + s + "' at byte " +
+                                 std::to_string(idx) + ", but found '" +
+                                 text.substr(idx, s.length()) + "'");
     }
 }
 
@@ -29,7 +29,8 @@ std::string Parser::consume_while(std::function<bool(char)> consume) {
 }
 
 std::string Parser::consume_whitespace() {
-    return consume_while([](char c) -> bool { return c == ' '; });
+    return consume_while(
+        [](char c) -> bool { return c == ' ' || c == '\t' || c == '\n'; });
 }
 
 std::string Parser::parse_name() {

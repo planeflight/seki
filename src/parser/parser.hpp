@@ -10,8 +10,6 @@
 #include <string>
 #include <utility>
 
-#include "../dom.hpp"
-
 class Parser {
   public:
     Parser(const std::string &str);
