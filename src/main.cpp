@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "layout.hpp"
+#include "parser/parse_css.hpp"
 #include "parser/parse_html.hpp"
 #include "util/file.hpp"
 #include "util/types.hpp"
@@ -25,6 +26,13 @@ void init() {
     HTMLParser parser(source);
     Node *r = parser.parse();
     std::cout << r->s << std::endl;
+
+    // CSS
+    CSSParser css_parser(load_file("./tests/index.css"));
+    StyleSheet *style_sheet = css_parser.parse();
+    for (Rule &r : style_sheet->rules) {
+        std::cout << "Rule:------\n" << r << "\n";
+    }
 
     // load icon
     g.icon = LoadImage("./res/icon.png");
@@ -78,6 +86,8 @@ void init() {
     p->dimensions.margin.color = RED;
     p->text_align = TextAlign::RIGHT;
     g.root.construct_dimensions();
+
+    delete style_sheet;
 }
 
 void input(f32 dt) {}

@@ -1,0 +1,9 @@
+h1 {
+  text-align: center;
+  color: red;
+  background-color: yellow;
+}
+
+.header {
+  text-align: right;
+}

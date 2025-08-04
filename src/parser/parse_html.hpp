@@ -1,7 +1,8 @@
 #ifndef PARSER_PARSE_HTML
 #define PARSER_PARSE_HTML
 
-#include "parser.hpp"
+#include "dom.hpp"
+#include "parser/parser.hpp"
 
 class HTMLParser : public Parser {
   public:
