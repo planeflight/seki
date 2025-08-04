@@ -121,6 +121,17 @@ struct LayoutBox {
     TextAlign text_align = TextAlign::LEFT;
 };
 
+struct ContainerBox : public LayoutBox {
+    ContainerBox();
+    enum class ContainerType {
+        SECTION,
+        HEADER,
+        FOOTER,
+        DIV,
+        MISC, // any other basic container
+    } container_type;
+};
+
 struct TextBox : public LayoutBox {
     TextBox(const std::string &text, Font font, float height);
     virtual void render() override;

@@ -76,6 +76,8 @@ void LayoutBox::render() {
     }
 }
 
+ContainerBox::ContainerBox() : LayoutBox() {}
+
 TextBox::TextBox(const std::string &text, Font font, float height)
     : LayoutBox(), text(text), font(font), height(height) {}
 
