@@ -114,6 +114,7 @@ struct LayoutBox {
     }
 
     Dimensions dimensions;
+    float content_start = 0.0f;
     BlockType block_type = BlockType::BLOCK;
     std::vector<LayoutBox *> children;
     Color text_color = BLACK, background_color = WHITE;

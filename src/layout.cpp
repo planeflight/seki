@@ -19,7 +19,13 @@ void LayoutBox::construct_dimensions() {
                         dimensions.margin.left +
                         dimensions.padding.left; // also content_x
         float child_y = dimensions.rect.y + dimensions.border.top +
-                        dimensions.margin.top + dimensions.padding.top;
+                        dimensions.margin.top + dimensions.padding.top +
+                        content_start;
+        float height = dimensions.rect.height;
+        if (height == 0.0f)
+            height = dimensions.border.top_bottom() +
+                     dimensions.margin.top_bottom() +
+                     dimensions.padding.top_bottom();
         for (auto *c : children) {
             auto &cd = c->dimensions;
             cd.rect.x = child_x;
@@ -32,8 +38,12 @@ void LayoutBox::construct_dimensions() {
 
             // since cd.rect.height is computed we can increment
             child_y += cd.rect.height;
+            std::cout << "child_y: " << child_y << std::endl;
+            std::cout << c->dimensions.rect.height << std::endl;
+            height += cd.rect.height;
         }
-        // dimensions.rect.height = child_y;
+        dimensions.rect.height = height;
+        // dimensions.rect.height += (child_y - content_y);
     } else {
         UNIMPLEMENTED();
     }
@@ -89,6 +99,8 @@ void TextBox::construct_dimensions() {
     dimensions.rect.height = size.y + dimensions.border.top_bottom() +
                              dimensions.margin.top_bottom() +
                              dimensions.padding.top_bottom();
+    std::cout << "processing " << text << std::endl;
+    content_start = size.y;
     LayoutBox::construct_dimensions();
 }
 
@@ -182,6 +194,7 @@ void ParagraphBox::construct_dimensions() {
         dimensions.margin.top_bottom() + dimensions.border.top_bottom() +
         dimensions.padding.top_bottom() + substrings.size() * height * spacing;
 
+    content_start = substrings.size() * height * spacing;
     // propagate to children
     LayoutBox::construct_dimensions();
 }

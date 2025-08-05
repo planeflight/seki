@@ -1,5 +1,7 @@
 #include "parse_html.hpp"
 
+#include "parser/parse_css.hpp"
+
 HTMLParser::HTMLParser(const std::string &str) : Parser(str) {}
 
 HTMLParser::~HTMLParser() {
@@ -59,7 +61,7 @@ AttributeMap HTMLParser::parse_attributes() {
         consume_whitespace();
         if (text[idx] == '>') break;
         auto attr = parse_attribute();
-        map.insert(attr);
+        map.push_back(Declaration{attr.first, attr.second});
     }
     return map;
 }
