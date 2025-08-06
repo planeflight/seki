@@ -89,7 +89,9 @@ void LayoutBox::render() {
 ContainerBox::ContainerBox() : LayoutBox() {}
 
 TextBox::TextBox(const std::string &text, Font font, float height)
-    : LayoutBox(), text(text), font(font), height(height) {}
+    : LayoutBox(), text(text), font(font), height(height) {
+    this->text = normalize_whitespace(this->text);
+}
 
 void TextBox::construct_dimensions() {
     Vector2 size = MeasureTextEx(font, text.c_str(), height, 0);
