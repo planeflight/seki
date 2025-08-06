@@ -4,6 +4,7 @@
 #include <raylib.h>
 
 #include <iostream>
+#include <sstream>
 
 #define UNIMPLEMENTED() std::cout << "UNIMPLEMENTED: " << __FUNCTION__ << "\n"
 
@@ -16,5 +17,7 @@ inline std::ostream &operator<<(std::ostream &ostream, const Rectangle &r) {
             << "}";
     return ostream;
 }
+
+std::string normalize_whitespace(const std::string &input);
 
 #endif // UTIL_DEF_HPP
