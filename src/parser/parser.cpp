@@ -29,8 +29,9 @@ std::string Parser::consume_while(std::function<bool(char)> consume) {
 }
 
 std::string Parser::consume_whitespace() {
-    return consume_while(
-        [](char c) -> bool { return c == ' ' || c == '\t' || c == '\n'; });
+    return consume_while([](char c) -> bool {
+        return c == ' ' || c == '\t' || c == '\n' || c == '\r';
+    });
 }
 
 std::string Parser::parse_name() {

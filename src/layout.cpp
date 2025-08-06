@@ -38,8 +38,6 @@ void LayoutBox::construct_dimensions() {
 
             // since cd.rect.height is computed we can increment
             child_y += cd.rect.height;
-            std::cout << "child_y: " << child_y << std::endl;
-            std::cout << c->dimensions.rect.height << std::endl;
             height += cd.rect.height;
         }
         dimensions.rect.height = height;
@@ -101,7 +99,6 @@ void TextBox::construct_dimensions() {
     dimensions.rect.height = size.y + dimensions.border.top_bottom() +
                              dimensions.margin.top_bottom() +
                              dimensions.padding.top_bottom();
-    std::cout << "processing " << text << std::endl;
     content_start = size.y;
     LayoutBox::construct_dimensions();
 }

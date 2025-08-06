@@ -5,6 +5,7 @@
 #include "layout.hpp"
 #include "parser/parse_css.hpp"
 #include "parser/parse_html.hpp"
+#include "style.hpp"
 #include "util/file.hpp"
 #include "util/types.hpp"
 
@@ -16,16 +17,80 @@ static constexpr i32 window_width = 1600, window_height = 900;
 
 struct Global {
     Font font;
-    LayoutBox root;
+    LayoutBox *root = nullptr;
     Image icon;
 } g;
+
+int s = 1;
+void print_nodes(const Node *r) {
+    std::cout << r->s << ": " << (int)r->type << std::endl;
+    std::cout << "children: " << r->children.size() << std::endl;
+    for (const Node *c : r->children) {
+        s++;
+        std::cout << "  ";
+        print_nodes(c);
+    }
+}
+
+void demo() {
+    g.root = new LayoutBox;
+    // TEST LayoutBox
+    g.root->dimensions = {.rect = {0.0f, 0.0f, window_width, 0.0f}};
+    g.root->text_align = TextAlign::CENTER;
+    TextBox *t = g.root->push_child<TextBox>(heading<1>("Hikes", g.font));
+    t->dimensions.border.set_uniform(10.0f);
+    t->dimensions.border.color = RED;
+    t->dimensions.margin.set_uniform(10.0f);
+    t->dimensions.margin.color = YELLOW;
+    t->dimensions.padding.set_uniform(10.0f);
+    t->dimensions.padding.color = GREEN;
+    // g.root->children.back()->text_align = TextAlign::RIGHT;
+
+    g.root->push_child<TextBox>(heading<3>("Lakes Trail", g.font));
+    g.root->children.back()->text_align = TextAlign::LEFT;
+    g.root->children.back()->text_color = RED;
+    g.root->push_child<TextBox>(heading<3>("General Sherman Loop", g.font));
+    g.root->push_child<TextBox>(heading<1>("Backcountry", g.font));
+    // paragraph
+    ParagraphBox *p = g.root->create_child<ParagraphBox>(
+        "Placeholder text is temporary text used to indicate where actual "
+        "content should go, often seen in website forms or design mockups. It "
+        "helps designers and developers focus on layout and visual elements "
+        "without being distracted by the content itself. A common example "
+        "is \" Lorem ipsum, \" a pseudo-Latin text used to simulate the "
+        "appearance of text. ",
+        g.font,
+        23.0f);
+    p->dimensions.margin.set_uniform(25.0f);
+    p->dimensions.margin.color = YELLOW;
+    p->push_child<TextBox>(heading<2>("Text", g.font));
+    p->children[0]->dimensions.padding.set_uniform(10.0f);
+    p->children[0]->dimensions.padding.color = BLUE;
+
+    p = g.root->create_child<ParagraphBox>(
+        "Placeholder text is temporary text used to indicate where actual "
+        "content should go, often seen in website forms or design mockups. It "
+        "helps designers and developers focus on layout and visual elements "
+        "without being distracted by the content itself. A common example "
+        "is \" Lorem ipsum, \" a pseudo-Latin text used to simulate the "
+        "appearance of text. ",
+        g.font,
+        23.0f);
+    p->dimensions.margin.set_uniform(45.0f);
+    p->dimensions.margin.color = RED;
+    p->text_align = TextAlign::RIGHT;
+    g.root->dimensions.padding.set_uniform(50.0f);
+    g.root->dimensions.padding.color = GREEN;
+    g.root->construct_dimensions();
+}
 
 void init() {
     std::string source = load_file("./tests/index.html");
     std::cout << source << std::endl;
     HTMLParser parser(source);
     Node *r = parser.parse();
-    std::cout << r->s << std::endl;
+    print_nodes(r);
+    std::cout << s << std::endl;
 
     // CSS
     CSSParser css_parser(load_file("./tests/index.css"));
@@ -43,49 +108,10 @@ void init() {
     g.font = LoadFontEx(
         "./res/Open_Sans/static/OpenSans-Regular.ttf", 100, nullptr, 0);
 
-    // TEST LayoutBox
-    g.root.dimensions = {.rect = {0.0f, 0.0f, window_width, window_height}};
-    g.root.text_align = TextAlign::CENTER;
-    TextBox *t = g.root.push_child<TextBox>(heading<1>("Hikes", g.font));
-    t->dimensions.border.set_uniform(10.0f);
-    t->dimensions.border.color = RED;
-    t->dimensions.margin.set_uniform(10.0f);
-    t->dimensions.margin.color = YELLOW;
-    t->dimensions.padding.set_uniform(10.0f);
-    t->dimensions.padding.color = GREEN;
-    // g.root.children.back()->text_align = TextAlign::RIGHT;
-
-    g.root.push_child<TextBox>(heading<3>("Lakes Trail", g.font));
-    g.root.children.back()->text_align = TextAlign::LEFT;
-    g.root.children.back()->text_color = RED;
-    g.root.push_child<TextBox>(heading<3>("General Sherman Loop", g.font));
-    g.root.push_child<TextBox>(heading<1>("Backcountry", g.font));
-    // paragraph
-    ParagraphBox *p = g.root.create_child<ParagraphBox>(
-        "Placeholder text is temporary text used to indicate where actual "
-        "content should go, often seen in website forms or design mockups. It "
-        "helps designers and developers focus on layout and visual elements "
-        "without being distracted by the content itself. A common example "
-        "is \" Lorem ipsum, \" a pseudo-Latin text used to simulate the "
-        "appearance of text. ",
-        g.font,
-        23.0f);
-    p->dimensions.margin.set_uniform(25.0f);
-    p->dimensions.margin.color = YELLOW;
-
-    p = g.root.create_child<ParagraphBox>(
-        "Placeholder text is temporary text used to indicate where actual "
-        "content should go, often seen in website forms or design mockups. It "
-        "helps designers and developers focus on layout and visual elements "
-        "without being distracted by the content itself. A common example "
-        "is \" Lorem ipsum, \" a pseudo-Latin text used to simulate the "
-        "appearance of text. ",
-        g.font,
-        23.0f);
-    p->dimensions.margin.set_uniform(45.0f);
-    p->dimensions.margin.color = RED;
-    p->text_align = TextAlign::RIGHT;
-    g.root.construct_dimensions();
+    // demo();
+    g.root = generate_style(r, style_sheet, g.font);
+    g.root->dimensions.rect.width = window_width;
+    g.root->construct_dimensions();
 
     delete style_sheet;
 }
@@ -98,12 +124,13 @@ void render(f32 dt) {
     BeginDrawing();
     ClearBackground(WHITE);
 
-    g.root.render();
+    g.root->render();
 
     EndDrawing();
 }
 
 void quit() {
+    if (g.root != nullptr) delete g.root;
     UnloadFont(g.font);
     UnloadImage(g.icon);
     CloseWindow();
