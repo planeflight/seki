@@ -15,7 +15,7 @@ CFLAGS += -Wwrite-strings -DNOMINMAX -fno-omit-frame-pointer
 CFLAGS += -std=c++20 -fPIC
 CFLAGS += -g
 
-LIB = -Llib/raylib/src/ -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -latomic
+LIB = -Llib/raylib/src/ -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -latomic -lcurl
 INCLUDE = -Ilib/raylib/src/ -Ilib/raylib/src/external -Ilib/raylib/src/external/glfw/include -Isrc/
 
 DEFINES = -DPLATFORM_DESKTOP -DPLATFORM_DESKTOP_GLFW

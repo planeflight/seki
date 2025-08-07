@@ -11,7 +11,14 @@ In honor of exploring the beautiful Sequoia and King's Canyon front and backcoun
 - [ ] Lists
 - [ ] Forms
 
-## Building Raylib
+## Build
+
+### Dependencies
+
+- [libcurl openssl](https://curl.se/download.html)
+  - Or simply install via your package manager
+
+### Building Raylib
 
 First build raylib. Go to lib/raylib/src/ and run
 
@@ -19,7 +26,7 @@ First build raylib. Go to lib/raylib/src/ and run
 make PLATFORM=PLATFORM_DESKTOP
 ```
 
-### Build
+### Build Project
 
 Navigate to the base directory and simply compile using
 
