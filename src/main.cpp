@@ -37,7 +37,7 @@ void demo() {
     // TEST LayoutBox
     g.root->dimensions = {.rect = {0.0f, 0.0f, window_width, 0.0f}};
     g.root->text_align = TextAlign::CENTER;
-    TextBox *t = g.root->push_child<TextBox>(heading<1>("Hikes", g.font));
+    TextBox *t = g.root->push_child<TextBox>(heading(1, "Hikes", g.font));
     t->dimensions.border.set_uniform(10.0f);
     t->dimensions.border.color = RED;
     t->dimensions.margin.set_uniform(10.0f);
@@ -46,11 +46,11 @@ void demo() {
     t->dimensions.padding.color = GREEN;
     // g.root->children.back()->text_align = TextAlign::RIGHT;
 
-    g.root->push_child<TextBox>(heading<3>("Lakes Trail", g.font));
+    g.root->push_child<TextBox>(heading(3, "Lakes Trail", g.font));
     g.root->children.back()->text_align = TextAlign::LEFT;
     g.root->children.back()->text_color = RED;
-    g.root->push_child<TextBox>(heading<3>("General Sherman Loop", g.font));
-    g.root->push_child<TextBox>(heading<1>("Backcountry", g.font));
+    g.root->push_child<TextBox>(heading(3, "General Sherman Loop", g.font));
+    g.root->push_child<TextBox>(heading(1, "Backcountry", g.font));
     // paragraph
     ParagraphBox *p = g.root->create_child<ParagraphBox>(
         "Placeholder text is temporary text used to indicate where actual "
@@ -63,7 +63,7 @@ void demo() {
         23.0f);
     p->dimensions.margin.set_uniform(25.0f);
     p->dimensions.margin.color = YELLOW;
-    p->push_child<TextBox>(heading<2>("Text", g.font));
+    p->push_child<TextBox>(heading(2, "Text", g.font));
     p->children[0]->dimensions.padding.set_uniform(10.0f);
     p->children[0]->dimensions.padding.color = BLUE;
 

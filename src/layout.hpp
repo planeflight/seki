@@ -145,11 +145,10 @@ struct TextBox : public LayoutBox {
 
 TextBox *inline_text(const std::string &text, Font font, float height = 15);
 
-template <int Level>
-TextBox *heading(const std::string &text, Font font, float height = 50) {
-    height = std::max(5, 60 - 5 * Level);
-    return inline_text(text, font, height);
-}
+TextBox *heading(int level,
+                 const std::string &text,
+                 Font font,
+                 float height = 50);
 
 struct ParagraphBox : public TextBox {
     ParagraphBox(const std::string &text, Font font, float height);

@@ -137,6 +137,11 @@ TextBox *inline_text(const std::string &text, Font font, float height) {
     return t;
 }
 
+TextBox *heading(int level, const std::string &text, Font font, float height) {
+    height = std::max(5, 60 - 5 * level);
+    return inline_text(text, font, height);
+}
+
 ParagraphBox::ParagraphBox(const std::string &text, Font font, float height)
     : TextBox(text, font, height) {}
 
