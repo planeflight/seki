@@ -84,6 +84,37 @@ void LayoutBox::render() {
     }
 }
 
+ImageBox::ImageBox(const std::string &source) : source(source) {}
+
+ImageBox::~ImageBox() {
+    UnloadTexture(texture);
+    // delete children
+    LayoutBox::~LayoutBox();
+}
+
+void ImageBox::render() {
+    LayoutBox::render();
+    auto content = dimensions.get_padding_rect();
+    if (fit) {
+        DrawTexturePro(
+            texture,
+            {0.0f, 0.0f, (float)texture.width, (float)texture.height},
+            content,
+            {0.0f, 0.0f},
+            0.0f,
+            WHITE);
+    }
+}
+
+void ImageBox::construct_dimensions() {
+    dimensions.rect.height = texture.height + dimensions.margin.top_bottom() +
+                             dimensions.border.top_bottom() +
+                             dimensions.padding.top_bottom();
+    // no children allowed so, don't recurse
+    content_start = 0.0f;
+    // LayoutBox::construct_dimensions();
+}
+
 ContainerBox::ContainerBox() : LayoutBox() {}
 
 TextBox::TextBox(const std::string &text, Font font, float height)

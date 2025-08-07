@@ -122,6 +122,18 @@ struct LayoutBox {
     TextAlign text_align = TextAlign::LEFT;
 };
 
+struct ImageBox : public LayoutBox {
+    ImageBox(const std::string &source);
+    ~ImageBox() override;
+
+    void render() override;
+    void construct_dimensions() override;
+
+    std::string source;
+    Texture texture;
+    bool fit = true;
+};
+
 struct ContainerBox : public LayoutBox {
     ContainerBox();
     enum class ContainerType {
