@@ -19,7 +19,7 @@ enum class NodeType {
 };
 
 // <name, value> pairs
-using AttributeMap = std::vector<Declaration>;
+using AttributeMap = std::unordered_map<std::string, std::string>;
 
 struct Node {
     std::string s;

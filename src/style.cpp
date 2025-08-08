@@ -9,6 +9,7 @@
 
 #include "dom.hpp"
 #include "layout.hpp"
+#include "util/image_download.hpp"
 
 LayoutBox *process_node(Node *node, StyleSheet *style_sheet, Font font) {
     std::cout << "constructing: " << node->s << std::endl;
@@ -16,7 +17,7 @@ LayoutBox *process_node(Node *node, StyleSheet *style_sheet, Font font) {
     // HEADERS
     std::vector<std::string> headers = {
         "h1", "h2", "h3", "h4", "h5", "h6", "h7"};
-    if (std::find(headers.begin(), headers.end(), node->s) != headers.end()) {
+    if (node->type == NodeType::HEADING) {
         // if it's not empty return a text node
         if (!node->children.empty() &&
             node->children[0]->type == NodeType::TEXT) {
@@ -34,13 +35,22 @@ LayoutBox *process_node(Node *node, StyleSheet *style_sheet, Font font) {
     }
 
     // PARAGRAPH TEXT
-    if (node->s == "p") {
+    if (node->type == NodeType::PARAGRAPH) {
         if (!node->children.empty() &&
             node->children[0]->type == NodeType::TEXT) {
             ParagraphBox *p = new ParagraphBox(
                 node->children[0]->s, font, PARAGRAPH_FONT_SIZE);
             return p;
         }
+    }
+
+    // IMAGE
+    if (node->type == NodeType::IMAGE) {
+        const std::string &url = node->map["src"];
+        std::cout << url;
+        ImageBox *image = new ImageBox(url);
+        image->texture = load_texture(url);
+        return image;
     }
 
     // DEFAULT EMPTY CONTAINER

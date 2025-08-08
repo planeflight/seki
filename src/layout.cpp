@@ -95,6 +95,7 @@ ImageBox::~ImageBox() {
 void ImageBox::render() {
     LayoutBox::render();
     auto content = dimensions.get_padding_rect();
+    content.height = content.width * texture.height / texture.width;
     if (fit) {
         DrawTexturePro(
             texture,

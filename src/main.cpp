@@ -7,6 +7,7 @@
 #include "parser/parse_html.hpp"
 #include "style.hpp"
 #include "util/file.hpp"
+#include "util/image_download.hpp"
 #include "util/types.hpp"
 
 #ifdef PLATFORM_WEB
@@ -81,6 +82,12 @@ void demo() {
     p->text_align = TextAlign::RIGHT;
     g.root->dimensions.padding.set_uniform(50.0f);
     g.root->dimensions.padding.color = GREEN;
+
+    auto *img = g.root->create_child<ImageBox>(
+        "https://cdn.mos.cms.futurecdn.net/Nx5uwKj9tzBi43ZCB7TakX.jpg");
+    img->texture = load_texture(
+        "https://cdn.mos.cms.futurecdn.net/Nx5uwKj9tzBi43ZCB7TakX.jpg");
+
     g.root->construct_dimensions();
 }
 
@@ -108,10 +115,17 @@ void init() {
     g.font = LoadFontEx(
         "./res/Open_Sans/static/OpenSans-Regular.ttf", 100, nullptr, 0);
 
-    // demo();
-    g.root = generate_style(r, style_sheet, g.font);
+    g.root = generate_layout(r, style_sheet, g.font);
     g.root->dimensions.rect.width = window_width;
     g.root->construct_dimensions();
+
+    // TEST: download_image
+    init_downloader();
+    // download_image(
+    //     "https://cdn.mos.cms.futurecdn.net/Nx5uwKj9tzBi43ZCB7TakX.jpg",
+    //     "./res/server/save.png");
+
+    // demo();
 
     delete style_sheet;
 }
@@ -134,6 +148,7 @@ void quit() {
     UnloadFont(g.font);
     UnloadImage(g.icon);
     CloseWindow();
+    quit_downloader();
 }
 
 void frame();

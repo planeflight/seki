@@ -1,5 +1,8 @@
 #include "parse_html.hpp"
 
+#include <algorithm>
+
+#include "dom.hpp"
 #include "parser/parse_css.hpp"
 
 HTMLParser::HTMLParser(const std::string &str) : Parser(str) {}
@@ -25,9 +28,16 @@ Node *HTMLParser::parse_element() {
     // opening
     expect("<");
     auto tag_name = parse_name();
+
     auto attrs = parse_attributes();
+    // no children cases
+    if (tag_name == "img") {
+        expect("/>");
+        return new Node(tag_name, attrs, NodeType::IMAGE, {});
+    }
     expect(">");
 
+    // yes children cases
     auto children = parse_nodes();
 
     // closing
@@ -35,13 +45,26 @@ Node *HTMLParser::parse_element() {
     expect(tag_name);
     expect(">");
 
-    return new Node{tag_name, attrs, NodeType::ELEMENT, children};
+    Node *n = new Node{tag_name, attrs, NodeType::ELEMENT, children};
+
+    // determine tag type
+    std::vector<std::string> headers = {
+        "h1", "h2", "h3", "h4", "h5", "h6", "h7"};
+    if (std::find(headers.begin(), headers.end(), tag_name) != headers.end()) {
+        n->type = NodeType::HEADING;
+    }
+
+    if (tag_name == "p") n->type = NodeType::PARAGRAPH;
+
+    return n;
 }
 
 std::pair<std::string, std::string> HTMLParser::parse_attribute() {
     auto name = parse_name();
+    std::cout << "name: '" << name << "'\n";
     expect("=");
     auto value = parse_attr_value();
+    std::cout << ", value: " << value << std::endl;
     return {name, value};
 }
 
@@ -59,9 +82,12 @@ AttributeMap HTMLParser::parse_attributes() {
     AttributeMap map;
     while (true) {
         consume_whitespace();
-        if (text[idx] == '>') break;
+        // regular AND no children case
+        if (text[idx] == '>' || (text[idx] == '/' && text[idx + 1] == '>'))
+            break;
+
         auto attr = parse_attribute();
-        map.push_back(Declaration{attr.first, attr.second});
+        map[attr.first] = attr.second;
     }
     return map;
 }
