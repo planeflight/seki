@@ -7,9 +7,7 @@ In honor of exploring the beautiful Sequoia and King's Canyon front and backcoun
 - [x] Basic HTML/CSS parsing
 - [x] Inline/block DOM layouts
 - [x] Border/margin/padding edges & colors
-- [ ] Images
-- [ ] Lists
-- [ ] Forms
+- [x] Images
 
 ## Build
 
