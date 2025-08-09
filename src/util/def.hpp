@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 #define UNIMPLEMENTED() std::cout << "UNIMPLEMENTED: " << __FUNCTION__ << "\n"
 
@@ -20,4 +21,8 @@ inline std::ostream &operator<<(std::ostream &ostream, const Rectangle &r) {
 
 std::string normalize_whitespace(const std::string &input);
 
+Color str_to_color(const std::string &s);
+
+std::vector<std::string> str_split(const std::string &s,
+                                   const std::string &delimiter = " ");
 #endif // UTIL_DEF_HPP

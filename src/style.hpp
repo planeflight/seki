@@ -10,8 +10,12 @@
 // TODO: DEFINE DEFAULT FONTS/SIZES/PADDINGS HERE
 const float PARAGRAPH_FONT_SIZE = 22.0f;
 
-LayoutBox *process_node(Node *node, StyleSheet *style_sheet, Font font);
+LayoutBox *process_node(Node *node, Font font);
 
-LayoutBox *generate_layout(Node *root, StyleSheet *style_sheet, Font font);
+LayoutBox *generate_layout(Node *root, Font font);
+
+void apply_style(LayoutBox *node, StyleSheet &style);
+
+void apply_declarations(LayoutBox *node, const std::vector<Declaration> &d);
 
 #endif // STYLE_HPP

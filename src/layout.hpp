@@ -4,9 +4,12 @@
 #include <raylib.h>
 
 #include <algorithm>
+#include <functional>
 #include <iostream>
 #include <string>
 #include <vector>
+
+#include "dom.hpp"
 
 struct EdgeSize {
     float left = 0.0f, right = 0.0f, top = 0.0f, bottom = 0.0f;
@@ -113,6 +116,9 @@ struct LayoutBox {
         return child;
     }
 
+    void cascade_children(
+        std::function<void(LayoutBox *parent, LayoutBox *child)> func);
+
     Dimensions dimensions;
     float content_start = 0.0f;
     BlockType block_type = BlockType::BLOCK;
@@ -120,6 +126,9 @@ struct LayoutBox {
     Color text_color = BLACK, background_color = WHITE;
 
     TextAlign text_align = TextAlign::LEFT;
+
+    // corresponding DOM node
+    Node *node = nullptr;
 };
 
 struct ImageBox : public LayoutBox {

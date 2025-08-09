@@ -136,6 +136,5 @@ std::vector<Declaration> CSSParser::parse_declarations() {
 }
 
 std::string CSSParser::parse_value() {
-    UNIMPLEMENTED();
-    return parse_identifier();
+    return consume_while([&](char c) -> bool { return c != ';'; });
 }

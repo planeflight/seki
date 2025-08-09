@@ -1,9 +1,18 @@
-h1 {
-  text-align: center;
-  color: red;
-  background-color: yellow;
+html {
+  margin: 10px;
 }
 
-.header {
-  text-align: right;
+h1 {
+  text-align: center;
+  color: #ff00ff;
+  background-color: skyblue;
+}
+
+#main {
+  text-align: left;
+}
+
+p {
+  color: red;
+  padding: 10px;
 }

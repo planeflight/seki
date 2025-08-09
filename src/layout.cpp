@@ -84,6 +84,15 @@ void LayoutBox::render() {
     }
 }
 
+void LayoutBox::cascade_children(
+    std::function<void(LayoutBox *parent, LayoutBox *child)> func) {
+    // apply to this child and then to its children nodes
+    for (auto *c : children) {
+        func(this, c);
+        c->cascade_children(func);
+    }
+}
+
 ImageBox::ImageBox(const std::string &source) : source(source) {}
 
 ImageBox::~ImageBox() {

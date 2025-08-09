@@ -18,7 +18,7 @@ void init_downloader() {
 void download_image(const std::string &source,
                     const std::string &save_location) {
     CURLcode error_code;
-    FILE *fp;
+    FILE *fp = nullptr;
 
     image = curl_easy_init();
     if (image) {

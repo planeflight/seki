@@ -115,7 +115,8 @@ void init() {
     g.font = LoadFontEx(
         "./res/Open_Sans/static/OpenSans-Regular.ttf", 100, nullptr, 0);
 
-    g.root = generate_layout(r, style_sheet, g.font);
+    g.root = generate_layout(r, g.font);
+    apply_style(g.root, *style_sheet);
     g.root->dimensions.rect.width = window_width;
     g.root->construct_dimensions();
 
