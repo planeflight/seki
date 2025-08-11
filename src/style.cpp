@@ -48,7 +48,6 @@ LayoutBox *process_node(Node *node, Font font) {
     // IMAGE
     if (node->type == NodeType::IMAGE) {
         const std::string &url = node->map["src"];
-        std::cout << url;
         ImageBox *image = new ImageBox(url);
         image->texture = load_texture(url);
         image->node = node;
@@ -87,11 +86,10 @@ void apply_style(LayoutBox *node, StyleSheet &style) {
             }
             // classes
             std::vector<std::string> classes;
-            classes = str_split(node->node->map["classes"], " ");
+            classes = str_split(node->node->map["class"], " ");
             for (const std::string &c : classes) {
                 if (std::find(s.classes.begin(), s.classes.end(), c) !=
                     s.classes.end()) {
-                    std::cout << "applying " << c << std::endl;
                     apply_declarations(node, r.declarations);
                     break;
                 }
@@ -152,6 +150,18 @@ void apply_declarations(LayoutBox *node,
             node->cascade_children([](LayoutBox *parent, LayoutBox *child) {
                 child->background_color = parent->background_color;
             });
+        } else if (d.name == "width" && node->node->type == NodeType::IMAGE) {
+            ImageBox *img = (ImageBox *)node;
+            img->goal_width =
+                std::stoi(d.value.substr(0, d.value.length() - 2));
+        } else if (d.name == "font-size") {
+            if (node->node->type == NodeType::HEADING) {
+                TextBox *t = (TextBox *)node;
+                t->height = std::stoi(d.value.substr(0, d.value.length() - 2));
+            } else if (node->node->type == NodeType::PARAGRAPH) {
+                TextBox *t = (TextBox *)node;
+                t->height = std::stoi(d.value.substr(0, d.value.length() - 2));
+            }
         }
     }
 }

@@ -35,7 +35,7 @@ struct EdgeSize {
     float top_bottom() const {
         return top + bottom;
     }
-    Color color;
+    Color color = WHITE;
 };
 
 struct Dimensions {
@@ -141,6 +141,7 @@ struct ImageBox : public LayoutBox {
     std::string source;
     Texture texture;
     bool fit = true;
+    float goal_width = 0.0f;
 };
 
 struct ContainerBox : public LayoutBox {

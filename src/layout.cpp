@@ -104,7 +104,12 @@ ImageBox::~ImageBox() {
 void ImageBox::render() {
     LayoutBox::render();
     auto content = dimensions.get_padding_rect();
-    content.height = content.width * texture.height / texture.width;
+    if (text_align == TextAlign::CENTER) {
+        content.x = content.width / 2.0f - goal_width / 2.0f;
+    } else if (text_align == TextAlign::RIGHT) {
+        content.x = content.width - goal_width;
+    }
+    content.width = goal_width;
     if (fit) {
         DrawTexturePro(
             texture,
@@ -117,9 +122,13 @@ void ImageBox::render() {
 }
 
 void ImageBox::construct_dimensions() {
-    dimensions.rect.height = texture.height + dimensions.margin.top_bottom() +
-                             dimensions.border.top_bottom() +
-                             dimensions.padding.top_bottom();
+    // use default goal width of taking the maximum width in parent
+    if (goal_width == 0.0f) goal_width = dimensions.rect.width;
+    // scale it
+    dimensions.rect.height = goal_width * texture.height / texture.width;
+    dimensions.rect.height += dimensions.margin.top_bottom() +
+                              dimensions.border.top_bottom() +
+                              dimensions.padding.top_bottom();
     // no children allowed so, don't recurse
     content_start = 0.0f;
     // LayoutBox::construct_dimensions();

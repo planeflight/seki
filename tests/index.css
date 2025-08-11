@@ -1,11 +1,12 @@
-html {
-  margin: 10px;
-}
-
 h1 {
   text-align: center;
-  color: #ff00ff;
+  color: #111122;
   background-color: skyblue;
+  font-size: 70px;
+}
+
+h4 {
+  padding: 30px;
 }
 
 #main {
@@ -13,6 +14,15 @@ h1 {
 }
 
 p {
-  color: red;
   padding: 10px;
+}
+
+img {
+  width: 400px;
+}
+
+.trail {
+  text-align: center;
+  border: 15px;
+  border-color: grey;
 }
