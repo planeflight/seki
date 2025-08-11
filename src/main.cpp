@@ -1,6 +1,7 @@
 #include <raylib.h>
 
 #include <iostream>
+#include <ostream>
 
 #include "layout.hpp"
 #include "parser/parse_css.hpp"
@@ -20,7 +21,9 @@ struct Global {
     Font font;
     LayoutBox *root = nullptr;
     Image icon;
+    float scroll = 0.0f;
 } g;
+float SCROLL_SPEED = 800.0f;
 
 int s = 1;
 void print_nodes(const Node *r) {
@@ -131,7 +134,24 @@ void init() {
     delete style_sheet;
 }
 
-void input(f32 dt) {}
+void input(f32 dt) {
+    // key input
+    if (IsKeyDown(KEY_DOWN)) {
+        g.scroll += SCROLL_SPEED * dt;
+    }
+    if (IsKeyDown(KEY_UP)) {
+        g.scroll -= SCROLL_SPEED * dt;
+    }
+
+    // scroll wheel
+    g.scroll -= GetMouseWheelMove() * SCROLL_SPEED * 0.05f;
+
+    // clamp scroll
+    if (g.scroll < 0.0f) g.scroll = 0.0f;
+
+    float bottom_border = g.root->dimensions.rect.height - window_height;
+    if (g.scroll > bottom_border) g.scroll = bottom_border;
+}
 
 void update(f32 dt) {}
 
@@ -139,7 +159,7 @@ void render(f32 dt) {
     BeginDrawing();
     ClearBackground(WHITE);
 
-    g.root->render();
+    g.root->render(g.scroll);
 
     EndDrawing();
 }

@@ -23,6 +23,6 @@ img {
 
 .trail {
   text-align: center;
-  border: 15px;
-  border-color: grey;
+  margin: 15px;
+  margin-color: grey;
 }

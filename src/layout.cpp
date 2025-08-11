@@ -6,6 +6,9 @@
 
 #include "util/def.hpp"
 
+LayoutBox::LayoutBox() {
+    dimensions.rect.height = 0.0f;
+}
 LayoutBox::~LayoutBox() {
     for (auto *child : children) {
         delete child;
@@ -41,19 +44,18 @@ void LayoutBox::construct_dimensions() {
             height += cd.rect.height;
         }
         dimensions.rect.height = height;
-        // dimensions.rect.height += (child_y - content_y);
     } else {
         UNIMPLEMENTED();
     }
 }
 
-void LayoutBox::render() {
+void LayoutBox::render(float scroll) {
     // draw border, padding, margin
     if (dimensions.margin != 0.0f &&
         dimensions.margin.color != background_color) {
         // draw margin rectangle
         DrawRectangle(dimensions.rect.x,
-                      dimensions.rect.y,
+                      dimensions.rect.y - scroll,
                       dimensions.rect.width,
                       dimensions.rect.height,
                       dimensions.margin.color);
@@ -62,7 +64,7 @@ void LayoutBox::render() {
         dimensions.border.color != background_color) {
         auto border = dimensions.get_margin_rect();
         DrawRectangle(border.x,
-                      border.y,
+                      border.y - scroll,
                       border.width,
                       border.height,
                       dimensions.border.color);
@@ -71,16 +73,19 @@ void LayoutBox::render() {
         dimensions.padding.color != background_color) {
         auto padding = dimensions.get_border_rect();
         DrawRectangle(padding.x,
-                      padding.y,
+                      padding.y - scroll,
                       padding.width,
                       padding.height,
                       dimensions.padding.color);
     }
     auto content = dimensions.get_padding_rect();
-    DrawRectangle(
-        content.x, content.y, content.width, content.height, background_color);
+    DrawRectangle(content.x,
+                  content.y - scroll,
+                  content.width,
+                  content.height,
+                  background_color);
     for (auto *c : children) {
-        c->render();
+        c->render(scroll);
     }
 }
 
@@ -101,8 +106,8 @@ ImageBox::~ImageBox() {
     LayoutBox::~LayoutBox();
 }
 
-void ImageBox::render() {
-    LayoutBox::render();
+void ImageBox::render(float scroll) {
+    LayoutBox::render(scroll);
     auto content = dimensions.get_padding_rect();
     if (text_align == TextAlign::CENTER) {
         content.x = content.width / 2.0f - goal_width / 2.0f;
@@ -110,6 +115,7 @@ void ImageBox::render() {
         content.x = content.width - goal_width;
     }
     content.width = goal_width;
+    content.y = content.y - scroll;
     if (fit) {
         DrawTexturePro(
             texture,
@@ -134,8 +140,6 @@ void ImageBox::construct_dimensions() {
     // LayoutBox::construct_dimensions();
 }
 
-ContainerBox::ContainerBox() : LayoutBox() {}
-
 TextBox::TextBox(const std::string &text, Font font, float height)
     : LayoutBox(), text(text), font(font), height(height) {
     this->text = normalize_whitespace(this->text);
@@ -154,10 +158,11 @@ void TextBox::construct_dimensions() {
 }
 
 // TextBox
-void TextBox::render() {
-    LayoutBox::render();
+void TextBox::render(float scroll) {
+    LayoutBox::render(scroll);
     if (text_align == TextAlign::LEFT) {
         Vector2 top_left = dimensions.get_content_start();
+        top_left.y -= scroll;
         DrawTextEx(font, text.c_str(), top_left, height, 0, text_color);
     } else if (text_align == TextAlign::CENTER) {
         Rectangle content_rect = dimensions.get_padding_rect();
@@ -165,20 +170,20 @@ void TextBox::render() {
         DrawTextEx(font,
                    text.c_str(),
                    {content_rect.x + content_rect.width / 2 - width / 2,
-                    content_rect.y},
+                    content_rect.y - scroll},
                    height,
                    0,
                    text_color);
     } else {
         Rectangle content_rect = dimensions.get_padding_rect();
         float width = MeasureTextEx(font, text.c_str(), height, 0).x;
-        DrawTextEx(
-            font,
-            text.c_str(),
-            {content_rect.x + content_rect.width - width, content_rect.y},
-            height,
-            0,
-            text_color);
+        DrawTextEx(font,
+                   text.c_str(),
+                   {content_rect.x + content_rect.width - width,
+                    content_rect.y - scroll},
+                   height,
+                   0,
+                   text_color);
     }
 }
 
@@ -195,9 +200,10 @@ TextBox *heading(int level, const std::string &text, Font font, float height) {
 ParagraphBox::ParagraphBox(const std::string &text, Font font, float height)
     : TextBox(text, font, height) {}
 
-void ParagraphBox::render() {
-    LayoutBox::render();
+void ParagraphBox::render(float scroll) {
+    LayoutBox::render(scroll);
     Vector2 p = dimensions.get_content_start();
+    p.y -= scroll;
     if (text_align == TextAlign::LEFT) {
         for (const auto &s : substrings) {
             DrawTextEx(font, s.first.c_str(), p, height, 0, text_color);

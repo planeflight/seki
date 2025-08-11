@@ -79,10 +79,10 @@ enum class BlockType { INLINE, BLOCK };
 enum class TextAlign { LEFT, CENTER, RIGHT };
 
 struct LayoutBox {
-    LayoutBox() = default;
+    LayoutBox();
     virtual ~LayoutBox();
     virtual void construct_dimensions();
-    virtual void render();
+    virtual void render(float scroll);
 
     template <typename T, typename... Args>
     T *create_child(Args &&...args) {
@@ -135,7 +135,7 @@ struct ImageBox : public LayoutBox {
     ImageBox(const std::string &source);
     ~ImageBox() override;
 
-    void render() override;
+    void render(float scroll) override;
     void construct_dimensions() override;
 
     std::string source;
@@ -144,20 +144,9 @@ struct ImageBox : public LayoutBox {
     float goal_width = 0.0f;
 };
 
-struct ContainerBox : public LayoutBox {
-    ContainerBox();
-    enum class ContainerType {
-        SECTION,
-        HEADER,
-        FOOTER,
-        DIV,
-        MISC, // any other basic container
-    } container_type;
-};
-
 struct TextBox : public LayoutBox {
     TextBox(const std::string &text, Font font, float height);
-    virtual void render() override;
+    virtual void render(float scroll) override;
     virtual void construct_dimensions() override;
 
     std::string text;
@@ -174,7 +163,7 @@ TextBox *heading(int level,
 
 struct ParagraphBox : public TextBox {
     ParagraphBox(const std::string &text, Font font, float height);
-    void render() override;
+    void render(float scroll) override;
     void construct_dimensions() override;
 
     float max_width = 0.0f;
