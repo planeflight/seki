@@ -77,7 +77,6 @@ void apply_style(LayoutBox *node, StyleSheet &style) {
     for (Rule &r : style.rules) {
         for (SimpleSelector &s : r.selectors) {
             if (s.tag_name == node->node->s) {
-                std::cout << "matching " << s.tag_name << std::endl;
                 apply_declarations(node, r.declarations);
             }
             // TODO: check if classes/id match
@@ -162,6 +161,43 @@ void apply_declarations(LayoutBox *node,
                 TextBox *t = (TextBox *)node;
                 t->height = std::stoi(d.value.substr(0, d.value.length() - 2));
             }
-        }
+        } else if (d.name == "margin-left")
+            node->dimensions.margin.left =
+                std::stoi(d.value.substr(0, d.value.length() - 2));
+        else if (d.name == "margin-right")
+            node->dimensions.margin.right =
+                std::stoi(d.value.substr(0, d.value.length() - 2));
+        else if (d.name == "margin-top")
+            node->dimensions.margin.top =
+                std::stoi(d.value.substr(0, d.value.length() - 2));
+        else if (d.name == "margin-bottom")
+            node->dimensions.margin.bottom =
+                std::stoi(d.value.substr(0, d.value.length() - 2));
+        // border
+        else if (d.name == "border-left")
+            node->dimensions.border.left =
+                std::stoi(d.value.substr(0, d.value.length() - 2));
+        else if (d.name == "border-right")
+            node->dimensions.border.right =
+                std::stoi(d.value.substr(0, d.value.length() - 2));
+        else if (d.name == "border-top")
+            node->dimensions.border.top =
+                std::stoi(d.value.substr(0, d.value.length() - 2));
+        else if (d.name == "border-bottom")
+            node->dimensions.border.bottom =
+                std::stoi(d.value.substr(0, d.value.length() - 2));
+        // padding
+        else if (d.name == "padding-left")
+            node->dimensions.padding.left =
+                std::stoi(d.value.substr(0, d.value.length() - 2));
+        else if (d.name == "padding-right")
+            node->dimensions.padding.right =
+                std::stoi(d.value.substr(0, d.value.length() - 2));
+        else if (d.name == "padding-top")
+            node->dimensions.padding.top =
+                std::stoi(d.value.substr(0, d.value.length() - 2));
+        else if (d.name == "padding-bottom")
+            node->dimensions.padding.bottom =
+                std::stoi(d.value.substr(0, d.value.length() - 2));
     }
 }

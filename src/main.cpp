@@ -96,7 +96,6 @@ void demo() {
 
 void init() {
     std::string source = load_file("./tests/index.html");
-    std::cout << source << std::endl;
     HTMLParser parser(source);
     Node *r = parser.parse();
     print_nodes(r);
@@ -113,6 +112,7 @@ void init() {
     g.icon = LoadImage("./res/icon.png");
     SetWindowIcon(g.icon);
 
+    init_downloader();
     // load font
     // load big for better aliasing
     g.font = LoadFontEx(
@@ -122,12 +122,6 @@ void init() {
     apply_style(g.root, *style_sheet);
     g.root->dimensions.rect.width = window_width;
     g.root->construct_dimensions();
-
-    // TEST: download_image
-    init_downloader();
-    // download_image(
-    //     "https://cdn.mos.cms.futurecdn.net/Nx5uwKj9tzBi43ZCB7TakX.jpg",
-    //     "./res/server/save.png");
 
     // demo();
 

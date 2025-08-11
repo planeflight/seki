@@ -2,12 +2,17 @@
 
 In honor of exploring the beautiful Sequoia and King's Canyon front and backcountry, this is a simple Sierra Nevada themed HTML/CSS browser rendering engine!
 
+![Basic Seki Browser Engine](./res/screenshot.png)
+
 ## Features
 
-- [x] Basic HTML/CSS parsing
-- [x] Inline/block DOM layouts
-- [x] Border/margin/padding edges & colors
-- [x] Images
+- Basic HTML/CSS parsing
+- Block DOM layouts
+- Border/margin/padding edges & colors
+- HTML Image Loading via libcurl
+- Resizable Images
+- Cascading Styles such as text color/background color, text alignment
+- Mouse & Keyboard Scrolling
 
 ## Build
 

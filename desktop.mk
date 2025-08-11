@@ -20,7 +20,7 @@ INCLUDE = -Ilib/raylib/src/ -Ilib/raylib/src/external -Ilib/raylib/src/external/
 
 DEFINES = -DPLATFORM_DESKTOP -DPLATFORM_DESKTOP_GLFW
 
-OPT = -O2
+OPT = -O3
 
 
 all: deps dirs $(BIN)/$(APP)
